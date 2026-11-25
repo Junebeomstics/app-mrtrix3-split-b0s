@@ -1,7 +1,15 @@
-[![Abcdspec-compliant](https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg)](https://github.com/brain-life/abcd-spec)
-[![Run on Brainlife.io](https://img.shields.io/badge/Brainlife-brainlife.app.263-blue.svg)](https://doi.org/10.25663/brainlife.app.263)
+<h1 align="center">Extract selected b-values from DWI</h1>
 
-# Extract b0 images from DWI 
+<p align="center">
+  Extracts the DWI volumes of a chosen b-value shell, with matching bvals and bvecs, using MRtrix3 dwiextract.
+</p>
+
+<p align="center">
+  <a href="https://github.com/brainlife/abcd-spec"><img src="https://img.shields.io/badge/ABCD_Spec-v1.1-green.svg" alt="ABCD Spec v1.1"></a>
+  <a href="https://doi.org/10.25663/brainlife.app.841"><img src="https://img.shields.io/badge/Brainlife-brainlife.app.841-blue.svg" alt="Run on brainlife.io"></a>
+</p>
+
+## At a glance
 
 <!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
 
@@ -11,26 +19,26 @@ Runs dwiextract -shell on the DWI to keep only the volumes of the target b-value
 
 | | |
 |---|---|
-| 📥 **Inputs** | `neuro/dwi` |
-| 📤 **Outputs** | `neuro/dwi` |
-| 🐳 **Container** | `brainlife/mrtrix3:3.0.0` |
-| ⚙️ **Resources** | 8 CPUs · 20 GB memory · 0.5 h walltime |
-| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.841](https://doi.org/10.25663/brainlife.app.841) |
+| **Inputs** | `neuro/dwi` |
+| **Outputs** | `neuro/dwi` |
+| **Container** | `brainlife/mrtrix3:3.0.0` |
+| **Resources** | 8 CPUs · 20 GB memory · 0.5 h walltime |
+| **Run it** | [doi.org/10.25663/brainlife.app.841](https://doi.org/10.25663/brainlife.app.841) |
 
-#### 📥 Inputs
+#### Inputs
 
 | Input | Datatype | Required | Description |
 |---|---|---|---|
 | `dwi` | `neuro/dwi` | yes | The path to the DWI datatype |
 
-#### 📤 Outputs
+#### Outputs
 
 | Output | Datatype | Description |
 |---|---|---|
 | `nodif` | `neuro/dwi` | The target DWI volumes |
 
 <details>
-<summary><b>⚙️ Parameters</b> (1)</summary>
+<summary><b>Parameters</b> (1)</summary>
 
 | Parameter | Type | Default | Description |
 |---|---|---|---|
@@ -38,82 +46,71 @@ Runs dwiextract -shell on the DWI to keep only the volumes of the target b-value
 
 </details>
 
-📚 **References used by this App:**
-- Tournier J-D, et al. MRtrix3: A fast, flexible and open software framework for medical image processing and visualisation. NeuroImage 202:116137 (2019). [doi:10.1016/j.neuroimage.2019.116137](https://doi.org/10.1016/j.neuroimage.2019.116137)
-
 <!-- brainlife-app:end -->
 
-This app will extract the b0 images from a DWI image using MrTrix3's dwiextract function. Will output both the b0 and the non b0 images. 
+## Running the App
 
-### Authors 
+### On brainlife.io
 
-- Brad Caron (bacaron@iu.edu) 
+Open the App at [doi.org/10.25663/brainlife.app.841](https://doi.org/10.25663/brainlife.app.841), choose `neuro/dwi` from your project, set the parameters and press **Execute**. The results are saved to your project as `neuro/dwi`.
 
-### Contributors 
+### Locally
 
-- Soichi Hayashi (hayashis@iu.edu) 
+You need [Singularity/Apptainer](https://apptainer.org/) (the App runs in `brainlife/mrtrix3:3.0.0`), [`jq`](https://jqlang.github.io/jq/).
 
-### Funding 
+1. Clone this repository.
+2. Create `config.json` with the paths to your inputs and the parameters:
 
-[![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1734853)
-[![NSF-BCS-1636893](https://img.shields.io/badge/NSF_BCS-1636893-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1636893)
-[![NSF-ACI-1916518](https://img.shields.io/badge/NSF_ACI-1916518-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1916518)
-[![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://nsf.gov/awardsearch/showAward?AWD_ID=1912270)
-[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://grantome.com/grant/NIH/R01-EB029272-01)
+   ```json
+   {
+       "dwi": "/path/to/dwi/dwi",
+       "bvecs": "/path/to/dwi/bvecs",
+       "bvals": "/path/to/dwi/bvals",
+       "sbref": "/path/to/dwi/sbref",
+       "sbref_json": "/path/to/dwi/sbref_json",
+       "target_bval": "0"
+   }
+   ```
 
-### Citations 
+3. Run `./main`.
 
-Please cite the following articles when publishing papers that used data, code or other resources created by the brainlife.io community. 
+## Troubleshooting
 
-1. Tournier, J.-D.; Smith, R. E.; Raffelt, D.; Tabbara, R.; Dhollander, T.; Pietsch, M.; Christiaens, D.; Jeurissen, B.; Yeh, C.-H. & Connelly, A. MRtrix3: A fast, flexible and open software framework for medical image processing and visualisation. NeuroImage, 2019, 202, 116137 
+- **failed**: separate.sh writes to nodif/ but main checks dwi/dwi.nii.gz, and the parameter key differs (target_bval vs bval); both must be fixed in the code.
 
-## Running the App 
+## Citing
 
-### On Brainlife.io 
+If you use this App, please cite it, the software it builds on and brainlife.io:
 
-You can submit this App online at [https://doi.org/10.25663/brainlife.app.263](https://doi.org/10.25663/brainlife.app.263) via the 'Execute' tab. 
+- Extract selected b-values from DWI. brainlife.io App. [doi:10.25663/brainlife.app.841](https://doi.org/10.25663/brainlife.app.841)
+- Tournier J-D, et al. MRtrix3: A fast, flexible and open software framework for medical image processing and visualisation. NeuroImage 202:116137 (2019). [doi:10.1016/j.neuroimage.2019.116137](https://doi.org/10.1016/j.neuroimage.2019.116137)
+- Tournier, J.-D.; Smith, R. E.; Raffelt, D.; Tabbara, R.; Dhollander, T.; Pietsch, M.; Christiaens, D.; Jeurissen, B.; Yeh, C.-H. & Connelly, A. MRtrix3: A fast, flexible and open software framework for medical image processing and visualisation. NeuroImage, 2019, 202, 116137
+- Hayashi S, Caron BA, Heinsfeld AS, et al. brainlife.io: a decentralized and open-source cloud platform to support neuroscience research. *Nature Methods* 21:809–813 (2024). [doi:10.1038/s41592-024-02237-2](https://doi.org/10.1038/s41592-024-02237-2)
+- Avesani P, McPherson B, Hayashi S, et al. The open diffusion data derivatives, brain data upcycling via integrated publishing of derivatives and reproducible open cloud services. *Scientific Data* 6:69 (2019). [doi:10.1038/s41597-019-0073-y](https://doi.org/10.1038/s41597-019-0073-y)
 
-### Running Locally (on your machine) 
+## Authors
 
-1. git clone this repo 
+- Brad Caron
 
-2. Inside the cloned directory, create `config.json` with something like the following content with paths to your input files. 
+**Contributors**
 
-```json 
-{
-   "dwi":    "testdata/dwi/dwi.nii.gz"
-} 
-``` 
+- Soichi Hayashi
 
-### Sample Datasets 
+## Funding
 
-You can download sample datasets from Brainlife using [Brainlife CLI](https://github.com/brain-life/cli). 
+[![Wellcome-226486/Z/22/Z](https://img.shields.io/badge/Wellcome-226486%2FZ%2F22%2FZ-purple.svg)](https://wellcome.org/)
+[![NIH-NINDS-U24NS140384](https://img.shields.io/badge/NIH_NINDS-U24NS140384-green.svg)](https://reporter.nih.gov/project-details/11261037)
+[![NIH-NINDS-UM1NS132207](https://img.shields.io/badge/NIH_NINDS-UM1NS132207-green.svg)](https://reporter.nih.gov/project-details/11411328)
+[![NIH-NIBIB-R01EB029272](https://img.shields.io/badge/NIH_NIBIB-R01EB029272-green.svg)](https://reporter.nih.gov/project-details/10262925)
+[![NIH-NIBIB-R01EB030896](https://img.shields.io/badge/NIH_NIBIB-R01EB030896-green.svg)](https://reporter.nih.gov/project-details/10428625)
+[![NIH-NIMH-R01MH126699](https://img.shields.io/badge/NIH_NIMH-R01MH126699-green.svg)](https://reporter.nih.gov/project-details/10460628)
+[![NIH-NIDCD-R01DC020088](https://img.shields.io/badge/NIH_NIDCD-R01DC020088-green.svg)](https://reporter.nih.gov/project-details/11140284)
+[![NSF-BCS-1734853](https://img.shields.io/badge/NSF_BCS-1734853-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1734853)
+[![NSF-BCS-2203524](https://img.shields.io/badge/NSF_BCS-2203524-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2203524)
+[![NSF-IIS-1636893](https://img.shields.io/badge/NSF_IIS-1636893-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1636893)
+[![NSF-OAC-2148729](https://img.shields.io/badge/NSF_OAC-2148729-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2148729)
+[![NSF-IIS-1912270](https://img.shields.io/badge/NSF_IIS-1912270-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1912270)
+[![NSF-IIS-2148700](https://img.shields.io/badge/NSF_IIS-2148700-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=2148700)
+[![NSF-OAC-1916518](https://img.shields.io/badge/NSF_OAC-1916518-blue.svg)](https://www.nsf.gov/awardsearch/showAward?AWD_ID=1916518)
 
-```
-npm install -g brainlife 
-bl login 
-mkdir input 
-bl dataset download 
-``` 
-
-3. Launch the App by executing 'main' 
-
-```bash 
-./main 
-``` 
-
-## Output 
-
-The main output of this App is contains both a non-b0 and b0 DWI images in separate DWI datatypes. 
-
-#### Product.json 
-
-The secondary output of this app is `product.json`. This file allows web interfaces, DB and API calls on the results of the processing. 
-
-### Dependencies 
-
-This App requires the following libraries when run locally. 
-
-- MRtrix3: https://mrtrix.readthedocs.io/en/3.0_rc3/installation/linux_install.html
-- jsonlab: https://github.com/fangq/jsonlab
-- singularity: https://singularity.lbl.gov/quickstart
+<sub>brainlife.io, which runs this App, is publicly funded by Wellcome, the U.S. National Institutes of Health and the U.S. National Science Foundation; acknowledging that support helps keep it running.</sub>
