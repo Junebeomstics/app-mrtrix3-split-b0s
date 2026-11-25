@@ -3,6 +3,46 @@
 
 # Extract b0 images from DWI 
 
+<!-- brainlife-app:begin (generated from the App manifest; edit the manifest, not this block) -->
+
+> **Extracts the DWI volumes of a chosen b-value shell, with matching bvals and bvecs, using MRtrix3 dwiextract.**
+
+Runs dwiextract -shell on the DWI to keep only the volumes of the target b-value (default 0, the b0 volumes). Use it to get b0 or single-shell images from multi-shell DWI. Warning: separate.sh reads the config key bval while the parameter is target_bval, and main checks dwi/dwi.nii.gz while the script writes nodif/, so the App fails as committed; the README describes the older b0/non-b0 split App.
+
+| | |
+|---|---|
+| 📥 **Inputs** | `neuro/dwi` |
+| 📤 **Outputs** | `neuro/dwi` |
+| 🐳 **Container** | `brainlife/mrtrix3:3.0.0` |
+| ⚙️ **Resources** | 8 CPUs · 20 GB memory · 0.5 h walltime |
+| 🔗 **Run it** | [doi.org/10.25663/brainlife.app.841](https://doi.org/10.25663/brainlife.app.841) |
+
+#### 📥 Inputs
+
+| Input | Datatype | Required | Description |
+|---|---|---|---|
+| `dwi` | `neuro/dwi` | yes | The path to the DWI datatype |
+
+#### 📤 Outputs
+
+| Output | Datatype | Description |
+|---|---|---|
+| `nodif` | `neuro/dwi` | The target DWI volumes |
+
+<details>
+<summary><b>⚙️ Parameters</b> (1)</summary>
+
+| Parameter | Type | Default | Description |
+|---|---|---|---|
+| `target_bval` | string | `0` | b-value of the shell to extract (0 for b0 volumes); currently not read by separate.sh, which reads the key bval. |
+
+</details>
+
+📚 **References used by this App:**
+- Tournier J-D, et al. MRtrix3: A fast, flexible and open software framework for medical image processing and visualisation. NeuroImage 202:116137 (2019). [doi:10.1016/j.neuroimage.2019.116137](https://doi.org/10.1016/j.neuroimage.2019.116137)
+
+<!-- brainlife-app:end -->
+
 This app will extract the b0 images from a DWI image using MrTrix3's dwiextract function. Will output both the b0 and the non b0 images. 
 
 ### Authors 
